@@ -1,0 +1,26 @@
+import React, { useState } from "react";
+import Login from "./Login";
+import Dashboard from "./Dashboard";
+
+export default function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  return (
+    <div>
+      {!isLoggedIn ? (
+        <div onClick={(e) => {
+          // Form submit aanaalo or login button click aanaalo Dashboard-ku switch aagum
+          const target = e.target as HTMLElement;
+          if (target.tagName === "BUTTON" && target.getAttribute("type") === "submit") {
+            e.preventDefault();
+            setIsLoggedIn(true);
+          }
+        }}>
+          <Login />
+        </div>
+      ) : (
+        <Dashboard onLogout={() => setIsLoggedIn(false)} />
+      )}
+    </div>
+  );
+}
