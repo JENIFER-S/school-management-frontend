@@ -40,7 +40,7 @@ interface ClassInfo {
   room: string;
   studentCount: number;
 }
-
+const API_BASE_URL = "https://school-management-backend-k45u.onrender.com/api";
 const classesList: ClassInfo[] = [
   { id: "C01", grade: "Grade 1", section: "A", classTeacher: "Kavitha M", room: "Room 101", studentCount: 41 },
   { id: "C02", grade: "Grade 1", section: "B", classTeacher: "Priya S", room: "Room 102", studentCount: 41 },
@@ -191,11 +191,11 @@ export default function Dashboard({ onLogout }: DashboardProps) {
 
   // FETCH STUDENTS FROM SPRING BOOT REST API
   const fetchStudents = () => {
-    let url = "http://localhost:8080/api/students";
+    let url = `${API_BASE_URL}/students`;
     if (selectedClassFilter !== "ALL") {
       const [g, s] = selectedClassFilter.split("-");
       if (g && s) {
-        url = `http://localhost:8080/api/students?grade=${encodeURIComponent(g)}&section=${encodeURIComponent(s)}`;
+        url = `${API_BASE_URL}/students?grade=${encodeURIComponent(g)}&section=${encodeURIComponent(s)}`;
       }
     }
 
@@ -391,7 +391,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
       status: "Active" as const,
     };
 
-    fetch("http://localhost:8080/api/students", {
+    fetch(`${API_BASE_URL}/students`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newEntry),
@@ -406,7 +406,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
         setNewStudentName("");
         setNewStudentParent("");
         setNewStudentPhone("");
-        alert("Student successfully saved to MySQL database!");
+        alert("Student successfully saved to PostgreSQL database!");
       })
       .catch((err) => {
         console.error("Error creating student:", err);
@@ -416,7 +416,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
 
   // 2. DELETE STUDENT BACKEND INTEGRATION (DELETE)
   const handleDeleteStudent = (id: string) => {
-    fetch(`http://localhost:8080/api/students/${id}`, {
+    fetch(`${API_BASE_URL}/students/${id}`, {
       method: "DELETE",
     })
       .then((res) => {
@@ -507,7 +507,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                   <div>
                     <p className="text-[11px] text-blue-100 font-medium">Total Students</p>
                     <h3 className="text-xl font-bold mt-0.5">{totalStudents.toLocaleString()}</h3>
-                    <p className="text-[10px] text-blue-100 mt-1">Live from MySQL</p>
+                    <p className="text-[10px] text-blue-100 mt-1">Live from PostgreSQL</p>
                   </div>
                   <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
                     <Users size={20} />
@@ -762,13 +762,13 @@ export default function Dashboard({ onLogout }: DashboardProps) {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-                    STUDENT MANAGEMENT (SPRING BOOT & MYSQL)
+                    STUDENT MANAGEMENT (SPRING BOOT & POSTGRESQL)
                   </span>
                   <h2 className="text-2xl font-bold text-slate-800 mt-0.5">
                     Manage student records and information
                   </h2>
                   <p className="text-xs text-slate-500 mt-1">
-                    Live connected to MySQL database via Spring Boot REST APIs
+                    Live connected to PostgreSQL database via Spring Boot REST APIs
                   </p>
                 </div>
 
@@ -855,7 +855,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                   <div>
                     <h3 className="font-bold text-slate-800 text-sm">All Students</h3>
                     <p className="text-xs text-slate-400">
-                      {loading ? "Loading from MySQL..." : `${filteredStudents.length} students found`}
+                      {loading ? "Loading from PostgreSQL..." : `${filteredStudents.length} students found`}
                     </p>
                   </div>
 
@@ -1029,7 +1029,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                                   <button
                                     onClick={() => {
                                       const updatedStatus = s.status === "Active" ? "Pending" : "Active";
-                                      fetch(`http://localhost:8080/api/students/${s.id}`, {
+                                      fetch(`${API_BASE_URL}/students/${s.id}`, {
                                         method: "PUT",
                                         headers: { "Content-Type": "application/json" },
                                         body: JSON.stringify({ ...s, status: updatedStatus }),
