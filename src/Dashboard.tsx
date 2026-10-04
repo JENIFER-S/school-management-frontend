@@ -40,7 +40,10 @@ interface ClassInfo {
   room: string;
   studentCount: number;
 }
-const API_BASE_URL = "https://school-management-backend-k45u.onrender.com/api";
+
+// Localhost Backend URL
+const API_BASE_URL = "http://localhost:8080/api";
+
 const classesList: ClassInfo[] = [
   { id: "C01", grade: "Grade 1", section: "A", classTeacher: "Kavitha M", room: "Room 101", studentCount: 41 },
   { id: "C02", grade: "Grade 1", section: "B", classTeacher: "Priya S", room: "Room 102", studentCount: 41 },
@@ -185,11 +188,11 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   const [activeActionModal, setActiveActionModal] = useState<string | null>(null);
   const [openRowMenuId, setOpenRowMenuId] = useState<string | null>(null);
 
-  // Synchronized Dynamic Student State - Fetched from Spring Boot Backend
+  // Synchronized Dynamic Student State - Fetched from Local Spring Boot Backend
   const [studentsListState, setStudentsListState] = useState<StudentRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // FETCH STUDENTS FROM SPRING BOOT REST API
+  // FETCH STUDENTS FROM LOCAL SPRING BOOT REST API
   const fetchStudents = () => {
     let url = `${API_BASE_URL}/students`;
     if (selectedClassFilter !== "ALL") {
@@ -225,7 +228,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
   const [newStudentGender, setNewStudentGender] = useState<"Male" | "Female">("Male");
   const [newStudentParent, setNewStudentParent] = useState("");
   const [newStudentPhone, setNewStudentPhone] = useState("");
-  const [newStudentClassId, setNewStudentClassId] = useState("C17"); // Default Grade 9-A ID
+  const [newStudentClassId, setNewStudentClassId] = useState("C17");
 
   // Selected Class Modal for Classes Tab
   const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
@@ -374,7 +377,6 @@ export default function Dashboard({ onLogout }: DashboardProps) {
     e.preventDefault();
     if (!newStudentName.trim()) return;
     
-    // Find matching class info based on selected classId (e.g. "C17")
     const matchedClass = classesList.find((c) => c.id === newStudentClassId) || classesList[16];
 
     const newEntry = {
@@ -406,7 +408,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
         setNewStudentName("");
         setNewStudentParent("");
         setNewStudentPhone("");
-        alert("Student successfully saved to PostgreSQL database!");
+        alert("Student successfully saved to Local MySQL database!");
       })
       .catch((err) => {
         console.error("Error creating student:", err);
@@ -507,7 +509,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                   <div>
                     <p className="text-[11px] text-blue-100 font-medium">Total Students</p>
                     <h3 className="text-xl font-bold mt-0.5">{totalStudents.toLocaleString()}</h3>
-                    <p className="text-[10px] text-blue-100 mt-1">Live from PostgreSQL</p>
+                    <p className="text-[10px] text-blue-100 mt-1">Live from MySQL</p>
                   </div>
                   <div className="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
                     <Users size={20} />
@@ -762,13 +764,13 @@ export default function Dashboard({ onLogout }: DashboardProps) {
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <span className="text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-                    STUDENT MANAGEMENT (SPRING BOOT & POSTGRESQL)
+                    STUDENT MANAGEMENT (SPRING BOOT & MYSQL)
                   </span>
                   <h2 className="text-2xl font-bold text-slate-800 mt-0.5">
                     Manage student records and information
                   </h2>
                   <p className="text-xs text-slate-500 mt-1">
-                    Live connected to PostgreSQL database via Spring Boot REST APIs
+                    Live connected to local MySQL database via Spring Boot REST APIs
                   </p>
                 </div>
 
@@ -855,7 +857,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                   <div>
                     <h3 className="font-bold text-slate-800 text-sm">All Students</h3>
                     <p className="text-xs text-slate-400">
-                      {loading ? "Loading from PostgreSQL..." : `${filteredStudents.length} students found`}
+                      {loading ? "Loading from MySQL..." : `${filteredStudents.length} students found`}
                     </p>
                   </div>
 
@@ -963,7 +965,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                       {loading ? (
                         <tr>
                           <td colSpan={8} className="p-6 text-center text-slate-400">
-                            Connecting to Spring Boot & Loading Students...
+                            Connecting to Local MySQL & Loading Students...
                           </td>
                         </tr>
                       ) : displayedStudents.length === 0 ? (
@@ -1433,7 +1435,7 @@ export default function Dashboard({ onLogout }: DashboardProps) {
                     Last 6 Months <ChevronDown size={13} />
                   </span>
                   <span>
-                    Total Students: <strong className="text-slate-850">1,250</strong>
+                    Total Students: <strong className="text-slate-850">1,200</strong>
                   </span>
                   <span>
                     Avg. Attendance: <strong className="text-slate-850">94%</strong>
